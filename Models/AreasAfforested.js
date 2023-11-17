@@ -2,20 +2,15 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const AreasAfforestedSchema = new Schema({
-  _id: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: mongoose.Types.ObjectId,
-    alias: 'areaId',
-  },
-  donorId: {
+  donor: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Donor', 
-    required: true,
+    required: false,
   },
-  organizationId: {
+  organization: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Organization', 
-    required: true,
+    required: false,
   },
   placeName: {
     type: String,

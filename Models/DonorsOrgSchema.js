@@ -2,11 +2,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const DonorsOrganizedSchema = new Schema({
-  _id: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: mongoose.Types.ObjectId,
-    alias: 'donorId',
-  },
   orgId: {
     type: Number,
     required: true,

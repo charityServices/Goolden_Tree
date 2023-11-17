@@ -2,11 +2,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const DonorsUserSchema = new Schema({
-  _id: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: mongoose.Types.ObjectId,
-    alias: 'userId',
-  },
   role: {
     type: String,
     required: true,
