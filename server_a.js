@@ -5,6 +5,8 @@ const port = 5000;
 const cors = require('cors');
 require('dotenv').config(); 
 const DB_URI = process.env.DB_URI
+const activitiesRouter = require("./Routers/activitiesRouter")
+const path = require("path")
 
 // register view engine
 app.set("view engine", "ejs");
@@ -14,6 +16,10 @@ app.use(express.static("public"));
 
 // fetch me data from every request
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/ActivitiesImages", express.static(path.join(__dirname, "ActivitiesImages")));
+
+app.use(activitiesRouter)
 
 mongoose.connect(DB_URI)
 .then(() => {
