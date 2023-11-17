@@ -24,7 +24,7 @@ mongoose.connect(DB_URI)
 
 app.use(express.json())
 app.use(cors());
-
+const n = 5
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
