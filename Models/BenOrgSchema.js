@@ -44,5 +44,4 @@ const BenOrgSchema = new Schema({
 });
 
 const Organization = mongoose.model("Organization", BenOrgSchema);
-
 module.exports = Organization;
