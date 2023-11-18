@@ -7,7 +7,7 @@ const multer = require("multer")
 let lastFileSequence = 0;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'ActivitiesImages');
+    cb(null, 'InKindDonationsImages');
   },
   filename: (req, file, cb) => {
     lastFileSequence++;

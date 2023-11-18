@@ -1,6 +1,27 @@
 const InKindDonation = require("../Models/inKindDonationModel");
 const IndividualDonor = require("../Models/DonorsUserSchema");
 const OrganizationalDonor = require('../Models/DonorsOrgSchema');
+const path = require("path")
+const multer = require("multer")
+
+
+// Storage Image By Multer Start
+let lastFileSequence = 0;
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'InKindDonationsImages');
+  },
+  filename: (req, file, cb) => {
+    lastFileSequence++;
+    const newFileName = `${Date.now()}_${lastFileSequence}${path.extname(file.originalname)}`;
+    cb(null, newFileName);
+  },
+});
+
+const addImage = multer({ storage: storage });
+const imageActivity = addImage.single('image');
+
+
 
 const getAllInKindDonations = async (req, res) => {
   try {
@@ -53,8 +74,10 @@ const getInKindDonationById = async (req, res) => {
 };
 
 const createInKindDonation = async (req, res) => {
-  const { item_type, description } = req.body;
+  const { item_type, description  } = req.body;
   const { id } = req.params;
+  const image = req.file.filename;
+
 
   try {
     // Check if the donor exists and determine the donor type based on the role field
@@ -78,6 +101,7 @@ const createInKindDonation = async (req, res) => {
         donor_type: individualDonor.role,
         item_type,
         description,
+        image,
       });
 
       const savedDonation = await newDonation.save();
@@ -89,6 +113,7 @@ const createInKindDonation = async (req, res) => {
         donor_type: organizationDonor.role,
         item_type,
         description,
+        image,
       });
 
       const savedDonation = await newDonation.save();
@@ -121,6 +146,7 @@ module.exports = {
   getInKindDonationById,
   createInKindDonation,
   getDonationsByDonorId,
+  imageActivity,
   
   // renderDonationForm, 
   // Add other controller methods as needed

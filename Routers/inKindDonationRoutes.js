@@ -4,7 +4,7 @@ const inKindDonationController = require("../Controllers/inKindDonationControlle
 
 router.get("/getAll", inKindDonationController.getAllInKindDonations);
 router.get("/:donationId", inKindDonationController.getInKindDonationById);
-router.post("/create/:id", inKindDonationController.createInKindDonation);
+router.post("/create/:id", inKindDonationController.imageActivity,inKindDonationController.createInKindDonation);
 
 router.get('/:id/donations', inKindDonationController.getDonationsByDonorId);
 

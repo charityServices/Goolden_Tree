@@ -35,6 +35,10 @@ const InKindDonationSchema = new Schema({
     type: String,
     default: "Pending",
   },
+  image:{
+    type: String,
+    required: true,
+  }
 });
 
 const InKindDonation = mongoose.model("InKindDonation", InKindDonationSchema);

@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const port = 5000;
 const cors = require('cors');
 require('dotenv').config();
+const path = require("path")
+
 const DB_URI = process.env.DB_URI;
 
 // Import routes
@@ -21,6 +23,10 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+
+
+app.use("/InKindDonationsImages", express.static(path.join(__dirname, "InKindDonationsImages")));
+
 
 // Connect to MongoDB
 mongoose.connect(DB_URI, {
