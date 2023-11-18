@@ -1,7 +1,8 @@
+// For Individual Donors
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const DonorsUserSchema = new Schema({
+const IndividualDonorSchema = new Schema({
   role: {
     type: String,
     required: true,
@@ -27,11 +28,11 @@ const DonorsUserSchema = new Schema({
   },
   phoneNumber: {
     type: String,
-    allowNull: true,
+    default: null,
   },
   imageName: {
     type: String,
-    allowNull: true,
+    default: null,
   },
   isDeleted: {
     type: Boolean,
@@ -39,6 +40,6 @@ const DonorsUserSchema = new Schema({
   },
 });
 
-const User = mongoose.model("User", DonorsUserSchema);
+const IndividualDonor = mongoose.model("User", IndividualDonorSchema);
 
-module.exports = User;
+module.exports = IndividualDonor;

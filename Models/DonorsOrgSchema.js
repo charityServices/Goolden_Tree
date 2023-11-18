@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const DonorsOrganizedSchema = new Schema({
+const OrganizationalDonorSchema = new Schema({
   orgId: {
     type: Number,
     required: true,
@@ -9,7 +9,7 @@ const DonorsOrganizedSchema = new Schema({
   role: {
     type: String,
     required: true,
-    default: "Org",
+    default: 'Org',
   },
   orgName: {
     type: String,
@@ -31,11 +31,11 @@ const DonorsOrganizedSchema = new Schema({
   },
   phoneNumber: {
     type: String,
-    allowNull: true,
+    default: null,
   },
   imageName: {
     type: String,
-    allowNull: true,
+    default: null,
   },
   isDeleted: {
     type: Boolean,
@@ -43,6 +43,6 @@ const DonorsOrganizedSchema = new Schema({
   },
 });
 
-const Donor = mongoose.model("Donor", DonorsOrganizedSchema);
+const OrganizationalDonor = mongoose.model('Donors', OrganizationalDonorSchema);
 
-module.exports = Donor;
+module.exports = OrganizationalDonor;
