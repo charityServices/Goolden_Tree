@@ -17,7 +17,7 @@ router.get("/getUserData", userController.getUserData);
 
 router.get('/getUserId/:id', userController.getUserId);
 
-router.put('/updateUserData/:id', userController.updateUserData);
+router.put('/updateUserData/:id', userController.imageUser, userController.updateUserData, );
 
 router.put("/deleteUser/:id", userController.deleteUser);
 

@@ -2,7 +2,7 @@ const { Router } = require("express");
 const OAuthController = require(`../Controllers/OAuth_controller`);
 const router = Router();
 
-router.get("/", OAuthController.button);
+router.get("/auth", OAuthController.button);
 
 router.get("/auth/google", OAuthController.authentication);
 

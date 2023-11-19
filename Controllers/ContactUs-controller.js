@@ -46,6 +46,7 @@ const sendEmailContact = async (req, res) => {
     }
 };
 
+
 module.exports = {
     sendEmailContact
 }

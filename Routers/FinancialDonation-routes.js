@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const donorsController = require("../Controllers/FinancialDonation-controller");
 
-router.get("/getAllDonors", donorsController.getAllDonors);
+// router.get("/getAllDonors", donorsController.getAllDonors);
 
 router.get("/getDonorById/:id", donorsController.getDonorById);
 

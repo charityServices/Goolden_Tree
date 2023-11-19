@@ -5,6 +5,22 @@ const dotenv = require('dotenv');
 const DonOrgMODEL = require('../Models/DonorsOrgSchema');
 const nodemailer = require('nodemailer');
 dotenv.config();
+const multer = require("multer")
+// Storage Image By Multer Start
+let lastFileSequence = 0;
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'UserImage');
+  },
+  filename: (req, file, cb) => {
+    lastFileSequence++;
+    const newFileName = `${Date.now()}_${lastFileSequence}${path.extname(file.originalname)}`;
+    cb(null, newFileName);
+  },
+});
+
+const addImage = multer({ storage: storage });
+const imageUser = addImage.single('image');
 
 const registerDonOrg = async (req, res) => {
     const { orgName, orgId, address, email, password, confirm_password, phoneNumber } = req.body;
@@ -286,6 +302,10 @@ const updateDonOrgData = async (req, res) => {
         if (password) {
             hashedPassword = await bcrypt.hash(password, 10);
         }
+        if (req.file) {
+            // If a file is uploaded, set imageName to the filename
+            imageName = req.file.filename;
+        }
         const updatedUser = await DonOrgMODEL.findByIdAndUpdate(id, {
             $set: {
                 orgName,
@@ -294,6 +314,7 @@ const updateDonOrgData = async (req, res) => {
                 email,
                 password: hashedPassword,
                 phoneNumber,
+                imageName
             }
         }, { new: true });
 
@@ -341,5 +362,6 @@ module.exports = {
     getDonOrgData,
     getDonOrgId,
     updateDonOrgData,
-    deleteDonOrg
+    deleteDonOrg,
+    imageUser
 };

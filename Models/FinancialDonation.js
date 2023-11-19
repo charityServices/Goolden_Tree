@@ -58,10 +58,17 @@ const DonorsSchema = new Schema({
     },
     isCompleted: {
         type: Boolean,
+        allowNull: true,
+        default: false,
+    },
+    InWork: {
+        type: Boolean,
+        allowNull: true,
         default: false,
     },
     maxDonationAmount: {
         type: Number,
+        allowNull: true,
         required: true,
     },
     currentDonationAmount: {
@@ -70,6 +77,7 @@ const DonorsSchema = new Schema({
     },
     expirationTime: {
         type: Date,
+        allowNull: true,
         required: true,
     },
 });

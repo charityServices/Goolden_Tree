@@ -1,14 +1,39 @@
 const Donors = require("../Models/FinancialDonation");
+const multer = require("multer")
 
-const getAllDonors = async (req, res) => {
-    try {
-        const donors = await Donors.find({ isCompleted: false });
-        return res.json(donors);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Internal server error" });
-    }
-};
+
+// Storage Image By Multer Start
+let lastFileSequence = 0;
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'UserImage');
+    },
+    filename: (req, file, cb) => {
+        lastFileSequence++;
+        const newFileName = `${Date.now()}_${lastFileSequence}${path.extname(file.originalname)}`;
+        cb(null, newFileName);
+    },
+});
+
+
+// const getAllDonors = async (req, res) => {
+//     try {
+//         const donors = await Donors.find({ isCompleted: false });
+//         return res.json(donors);
+//     } catch (error) {
+//         console.error(error);
+//         return res.status(500).json({ message: "Internal server error" });
+//     }
+// };
+// const getAllDonors = async (req, res) => {
+//     try {
+//         const donors = await Donors.find({ isCompleted: false });
+//         res.render('home', { donors }); // Assuming 'home' is the correct EJS file name
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: "Internal server error" });
+//     }
+// };
 
 const getDonorById = async (req, res) => {
     const { id } = req.params;
@@ -36,8 +61,13 @@ const createDonor = async (req, res) => {
             maxDonationAmount,
             expirationTime,
         });
+
+        if (req.file) {
+            // If a file is uploaded, set imageName to the filename
+            image = req.file.filename;
+        }
         await newDonor.save();
-        return res.status(201).json(newDonor);
+        return res.status(201).json({ newDonor, image });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error" });
@@ -86,17 +116,17 @@ const donate = async (req, res) => {
             donation.currentDonationAmount += donationToAdd;
 
             if (donation.currentDonationAmount === donation.maxDonationAmount) {
-                donation.expirationTime = new Date(Date.now() + 5 * 1000);
+                donation.expirationTime = new Date(Date.now() + 15 * 1000);
+                donation.InWork = true;
             }
             await donation.save();
             setTimeout(async () => {
-                console.log("Checking expiration");
                 if (donation.expirationTime && donation.expirationTime <= new Date()) {
                     console.log("Done !");
                     donation.isCompleted = true;
                     await donation.save();
                 }
-            }, 5000);
+            }, 15000);
 
             return res.json({ message: "Donation successful" });
         } else {
@@ -110,7 +140,7 @@ const donate = async (req, res) => {
 
 module.exports = {
     donate,
-    getAllDonors,
+    // getAllDonors,
     getDonorById,
     createDonor,
     updateDonor,

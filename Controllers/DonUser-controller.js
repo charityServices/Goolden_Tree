@@ -4,7 +4,25 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const UserModel = require('../Models/DonorsUserSchema');
 const nodemailer = require('nodemailer');
+const path = require("path")
+const multer = require("multer")
 dotenv.config();
+
+// Storage Image By Multer Start
+let lastFileSequence = 0;
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'UserImage');
+  },
+  filename: (req, file, cb) => {
+    lastFileSequence++;
+    const newFileName = `${Date.now()}_${lastFileSequence}${path.extname(file.originalname)}`;
+    cb(null, newFileName);
+  },
+});
+
+const addImage = multer({ storage: storage });
+const imageUser = addImage.single('image');
 
 const registerUser = async (req, res) => {
     const { firstName, lastName, email, password, confirm_password, phoneNumber } = req.body;
@@ -250,7 +268,7 @@ const getUserData = async (req, res) => {
     try {
         const users = await UserModel.find({ isDeleted: false });
         // res.json(users);
-        res.render('userdata', {
+        res.render('register', {
             users,
         });
     } catch (err) {
@@ -263,10 +281,16 @@ const getUserId = async (req, res) => {
     try {
         const user = await UserModel.findOne({ _id: id, isDeleted: false });
 
+        image_url = `http://localhost:5000/UserImage/${user.imageName}`,
+
+        user.UserImage = image_url
         if (!user) {
             return res.status(404).json({ error: "The User not found" });
         } else {
-            res.status(200).json(user);
+            res.status(200).json({
+                user,
+                image_url
+            });
         }
     } catch (err) {
         console.error(err);
@@ -277,7 +301,9 @@ const getUserId = async (req, res) => {
 const updateUserData = async (req, res) => {
     const { id } = req.params;
     const { firstName, lastName, email, password, confirm_password, phoneNumber } = req.body;
-
+    // const imageName = req.file.filename;
+    // const imageName = req.file ? req.file.filename : null;
+    // console.log(imageName);
     try {
         const schema = Joi.object({
             firstName: Joi.string().min(3).max(25),
@@ -297,7 +323,12 @@ const updateUserData = async (req, res) => {
         if (validate.error) {
             return res.status(400).json({ error: validate.error.details });
         }
+        let imageName = null; 
 
+        if (req.file) {
+            // If a file is uploaded, set imageName to the filename
+            imageName = req.file.filename;
+        }
         let hashedPassword;
         if (password) {
             hashedPassword = await bcrypt.hash(password, 10);
@@ -309,6 +340,7 @@ const updateUserData = async (req, res) => {
                 email,
                 password: hashedPassword,
                 phoneNumber,
+                imageName
             }
         }, { new: true });
 
@@ -355,5 +387,6 @@ module.exports = {
     getUserData,
     getUserId,
     updateUserData,
-    deleteUser
+    deleteUser,
+    imageUser
 };
