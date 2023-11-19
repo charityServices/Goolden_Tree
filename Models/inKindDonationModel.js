@@ -7,6 +7,11 @@ const InKindDonationSchema = new Schema({
     // ref: "Donor",
     required: true,
   },
+  title: {
+    type: String, // Assuming title is a string
+    required: true,
+  },
+
   item_type: {
     type: String,
     required: true,

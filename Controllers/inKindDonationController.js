@@ -1,6 +1,9 @@
+//inKindDonationController.js
 const InKindDonation = require("../Models/inKindDonationModel");
 const IndividualDonor = require("../Models/DonorsUserSchema");
 const OrganizationalDonor = require('../Models/DonorsOrgSchema');
+const Joi = require('joi');
+
 const path = require("path")
 const multer = require("multer")
 
@@ -23,18 +26,46 @@ const imageActivity = addImage.single('image');
 
 
 
+// controllers/inKindDonationController.js
+
+// ...
+
 const getAllInKindDonations = async (req, res) => {
   try {
-    const inKindDonations = await InKindDonation.find();
-    // res.json(inKindDonations);
-    res.render('donationsCards' , {   
-      inKindDonations
-    })
+    const { search, donorType, itemType } = req.query;
+
+    const query = {};
+
+    if (search) {
+      query.$or = [
+        { title: { $regex: new RegExp(search, 'i') } },
+        { description: { $regex: new RegExp(search, 'i') } },
+      ];
+    }
+
+    if (donorType) {
+      query.donor_type = donorType;
+    }
+
+    if (itemType) {
+      query.item_type = itemType;
+    }
+
+    const inKindDonations = await InKindDonation.find(query);
+
+    // Map donations with images
+    const inKindDonationsWithImages = inKindDonations.map((donation) => ({
+      ...donation.toJSON(),
+      image_url: `http://localhost:5000/InKindDonationsImages/${donation.image}`,
+    }));
+
+    res.render('donations', { donations: inKindDonationsWithImages });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 const getDonationsByDonorId = async (req, res) => {
   const { id } = req.params;
 
@@ -73,14 +104,36 @@ const getInKindDonationById = async (req, res) => {
   }
 };
 
+const validItemTypes = [
+  "Tree Planting Kit",
+  "Irrigation Tools",
+  "Plant Care Essentials",
+  "Portable Planting Boxes",
+  "Native Tree Seeds",
+  "Plants",
+];
+
+const donationSchema = Joi.object({
+  title: Joi.string().required(),
+  item_type: Joi.string().valid(...validItemTypes).required(),
+  description: Joi.string().required(),
+  // Add other validations as needed
+});
+
+
+
 const createInKindDonation = async (req, res) => {
-  const { item_type, description  } = req.body;
+  const { title, item_type, description } = req.body;
   const { id } = req.params;
   const image = req.file.filename;
 
+  // Validate request data
+  const { error } = donationSchema.validate({ title, item_type, description });
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
 
   try {
-    // Check if the donor exists and determine the donor type based on the role field
     const individualDonor = await IndividualDonor.findOne({
       _id: id,
     });
@@ -90,15 +143,14 @@ const createInKindDonation = async (req, res) => {
     });
 
     if (!individualDonor && !organizationDonor) {
-      // Handle the case where the donor is not found
       return res.status(404).json({ error: "Donor not found" });
     }
 
     if (individualDonor && individualDonor.role) {
-      // Donor is an individual user
       const newDonation = new InKindDonation({
         donor_id: id,
         donor_type: individualDonor.role,
+        title,
         item_type,
         description,
         image,
@@ -107,21 +159,19 @@ const createInKindDonation = async (req, res) => {
       const savedDonation = await newDonation.save();
       return res.status(201).json(savedDonation);
     } else if (organizationDonor && organizationDonor.role) {
-      // Donor is an organization
       const newDonation = new InKindDonation({
         donor_id: id,
         donor_type: organizationDonor.role,
+        title,
         item_type,
         description,
         image,
       });
 
       const savedDonation = await newDonation.save();
-      // return res.status(201).json(savedDonation);
-      return res.redirect('http://localhost:5000/create')
+      return res.status(201).json(savedDonation);
     }
 
-    // Donor's role is null
     return res.status(404).json({ error: "Donor's role is null" });
 
   } catch (error) {
@@ -129,17 +179,6 @@ const createInKindDonation = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-// const renderDonationForm = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const donor = await getDonorById(id); // Assuming you have a method to get the donor by ID
-//     res.render('donationForm', { donor });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// };
 
 module.exports = {
   getAllInKindDonations,
