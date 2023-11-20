@@ -38,8 +38,10 @@ app.set("view engine", "ejs");
 // static files
 app.use(express.static("public"));
 
+
 // fetch me data from every request
 app.use(express.urlencoded({ extended: true }));
+
 
 mongoose.connect(DB_URI)
   .then(() => {
@@ -61,9 +63,10 @@ const ContactUs = require('./Routers/ContactUs-routes');
 
 const FinancialDonation = require('./Routers/FinancialDonation-routes');
 
-const newAchieve = require('./Routers/new-routes');
-
 const OAuthRoute = require('./Routers/OAuth_routes');
+
+const inKindDonationRoutes = require('./Routers/inKindDonationRoutes');
+
 
 app.post('/create-payment-intent', async (req, res) => {
   const paymentIntent = await stripe.paymentIntents.create({
@@ -73,6 +76,10 @@ app.post('/create-payment-intent', async (req, res) => {
   res.json({ clientSecret: paymentIntent.client_secret });
 });
 
+app.get("/create", (request, response) => {
+  response.render("create", { title: "Create" });
+});
+
 app.get("/about", (request, response) => {
   response.render("about", { title: "About" });
 });
@@ -80,6 +87,32 @@ app.get("/about", (request, response) => {
 app.get("/success", (request, response) => {
   response.render("success", { title: "Success" });
 });
+
+app.get('/contact', (req, res) => {
+  res.render('contactConfirmation');
+});
+
+app.get('/Signup', (req, res) => {
+  res.render('signupU');
+});
+app.get('/SignupBen', (req, res) => {
+  res.render('signupB');
+});
+
+app.get('/Login', (req, res) => {
+  res.render('loginD');
+});
+
+app.get('/LoginB', (req, res) => {
+  res.render('loginB');
+});
+
+
+// app.get('/profile/:id', (req, res) => {
+//   res.render('profile');
+// });
+
+
 
 app.use(DonUserRoute);
 
@@ -92,9 +125,11 @@ app.use(OAuthRoute);
 app.use(ContactUs);
 
 app.use(FinancialDonation);
+
 app.use(paymentRouter);
 
-app.use(newAchieve);
+app.use("/InKindDonationsImages", express.static(path.join(__dirname, "InKindDonationsImages")));
+app.use(inKindDonationRoutes);
 
 
 //AY
@@ -116,9 +151,9 @@ app.get("/", async (req, res) => {
     const areasAfforested = await Afforested.find({ isCompleted: true });
     // const areasAfforested = await Donors.find({ isCompleted: true });
 
-    const willAfforested = await Afforested.find({ isCompleted: false , InWork : true });
+    const willAfforested = await Afforested.find({ isCompleted: false, InWork: true });
 
-    const money = await Afforested.find({ isCompleted: false , InWork : false });
+    const money = await Afforested.find({ isCompleted: false, InWork: false });
 
     const areasAfforestedWithImages = areasAfforested.map((area) => ({
       ...area.toJSON(),
@@ -167,6 +202,28 @@ app.get("/", async (req, res) => {
   }
 });
 
+
+app.get("/afforested-area/:id", async (req, res) => {
+  const id = req.params.id;
+  const areasAfforestedById = await Afforested.findById(id);
+
+  // Check if areasAfforestedById is not null before accessing its properties
+  if (areasAfforestedById) {
+    const image_url = `http://localhost:5000/AreasAfforestedImages/${areasAfforestedById.afforestedAreaImageName}`;
+    
+    // Update the property name to image_url
+    areasAfforestedById.image_url = image_url;
+
+    res.render("details", { areasAfforestedById: areasAfforestedById });
+  } else {
+    console.error(`No document found with id: ${id}`);
+    // Handle the case where no document is found, perhaps by redirecting or rendering an error page.
+    res.status(404).json({
+      success: false,
+      message: `No document found with id: ${id}`,
+    });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);

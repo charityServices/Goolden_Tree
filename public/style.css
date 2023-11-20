@@ -475,7 +475,7 @@ h2 {
   text-align: right;
 }
 
-p {
+p.aboutUs {
   color: #546e7a; /* Dark grey text color */
   line-height: 1.6;
   text-align: right;
@@ -484,3 +484,161 @@ p {
 /* Add additional styles for your navigation if needed */
 
 /* _______________________________________________________________________ */
+
+/* details page */
+
+/* Add this to your stylesheet */
+.full-width {
+  width: 100%;
+  text-align: right;
+}
+
+.details-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.details-image {
+  width: 100%; /* Ensures the image takes full width */
+}
+
+.img-details {
+  max-width: 100%; /* Ensures the image doesn't exceed its natural size */
+}
+
+.details-description {
+  width: 100%;
+  margin: 0 auto; /* Centers the description within the available width */
+  padding: 20px;
+  font-size: large;
+}
+
+.container-details{
+  display: block;
+  margin: 0;
+  margin-top: 62px;
+}
+
+.tree-button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  background-color: #4CAF50; /* لون الخلفية (أخضر غامق) */
+  color: #fff; /* لون النص */
+  border: 1px solid #4CAF50; /* حدود الزر */
+  border-radius: 4px; /* زاوية التقوس للحواف */
+  transition: background-color 0.3s, color 0.3s; /* تأثير انتقالي عند التحويل */
+  margin-right: 26px;
+
+  /* لتحديد الأنماط عند التحويل */
+  cursor: pointer;
+}
+
+/* تغيير الأنماط عند تمرير المؤشر (Hover) */
+.tree-button:hover {
+  background-color: #45a049; /* تغيير لون الخلفية عند التحويل (أخضر أفتح) */
+  color: #fff; /* تغيير لون النص عند التحويل */
+}
+
+
+footer h6{
+  text-align: right;
+}
+
+/* ________________________________________________________________ */
+/* صفحة المساعدة  */
+.donation {
+  text-align: center;
+  color: #007bff;
+  margin-top: 50px;
+}
+
+.donation-discription {
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 15px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px !important;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.donation-heading {
+  color: #28a745; /* لون أخضر متألق */
+  text-align: center;
+}
+
+.donation-description {
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+}
+
+input,
+button {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ced4da; /* حدود خفيفة */
+  border-radius: 5px;
+}
+
+button {
+  background-color: #28a745; /* لون زر الإرسال */
+  color: #fff; /* لون النص داخل زر الإرسال */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #218838; /* تغيير لون زر الإرسال عند التحويم */
+}

@@ -11,14 +11,14 @@ dotenv.config();
 // Storage Image By Multer Start
 let lastFileSequence = 0;
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'UserImage');
-  },
-  filename: (req, file, cb) => {
-    lastFileSequence++;
-    const newFileName = `${Date.now()}_${lastFileSequence}${path.extname(file.originalname)}`;
-    cb(null, newFileName);
-  },
+    destination: function (req, file, cb) {
+        cb(null, 'UserImage');
+    },
+    filename: (req, file, cb) => {
+        lastFileSequence++;
+        const newFileName = `${Date.now()}_${lastFileSequence}${path.extname(file.originalname)}`;
+        cb(null, newFileName);
+    },
 });
 
 const addImage = multer({ storage: storage });
@@ -72,16 +72,8 @@ const registerUser = async (req, res) => {
         const secretKey = process.env.SECRET_KEY;
         const token = jwt.sign(payload, secretKey, { expiresIn: "7d" });
 
-        req.session.token = token;
-        req.session.message = "User added successfully";
 
-        res.redirect('http://localhost:5000/getUserData');
-        // res.redirect(`http://localhost:5000/getUserData?token=${token}&message=User+added+successfully`); // Update the path as needed
-        // res.status(200).json({
-        //     validate,
-        //     message: "User added successfully",
-        //     token
-        // });
+        res.redirect('http://localhost:5000');
         // res.render('register', {
         //     validate,
         //     error: validate.error ? validate.error.details : null,
@@ -283,7 +275,7 @@ const getUserId = async (req, res) => {
 
         image_url = `http://localhost:5000/UserImage/${user.imageName}`,
 
-        user.UserImage = image_url
+            user.UserImage = image_url
         if (!user) {
             return res.status(404).json({ error: "The User not found" });
         } else {
@@ -323,7 +315,7 @@ const updateUserData = async (req, res) => {
         if (validate.error) {
             return res.status(400).json({ error: validate.error.details });
         }
-        let imageName = null; 
+        let imageName = null;
 
         if (req.file) {
             // If a file is uploaded, set imageName to the filename

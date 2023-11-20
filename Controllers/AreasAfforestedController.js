@@ -126,10 +126,17 @@ const getAfforestedByOrganizationId = async (req, res) => {
   }
 };
 
-//! Add New Afforested Activity 
+//
 const addNewAfforestedActivity = async (req, res) => {
   try {
-    const { placeName, areasLocation, treesPlanted, datePlanted, DonationAmount, Date, image, maxDonationAmount, expirationTime } = req.body;
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded",
+      });
+    }
+
+    const { placeName, areasLocation, treesPlanted, datePlanted, DonationAmount, Date, maxDonationAmount, expirationTime, descriptionAfforested } = req.body;
     const afforestedAreaImageName = req.file.filename;
 
     //! Add New Afforested Activity
@@ -141,19 +148,15 @@ const addNewAfforestedActivity = async (req, res) => {
       afforestedAreaImageName,
       DonationAmount,
       Date,
-      image,
       maxDonationAmount,
-      expirationTime
+      expirationTime,
+      descriptionAfforested
     });
 
     //! Save Afforested Activity
     const saveAfforestedActivity = await newAfforestedActivity.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Afforested Activity added successfully",
-      AfforestedActivity: saveAfforestedActivity,
-    });
+    res.status(200).render('successAddPost');
   } catch (error) {
     console.error("An error occurred while adding the Afforested Activity", error);
     res.status(500).json({

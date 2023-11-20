@@ -72,11 +72,15 @@ const registerBenOrg = async (req, res) => {
         const secretKey = process.env.SECRET_KEY;
         const token = jwt.sign(payload, secretKey, { expiresIn: "7d" });
 
+
         res.status(200).json({
             validate,
             message: "User added successfully",
-            token
+            token,
+            redirect: '/'
         });
+        
+        // res.redirect('http://localhost:5000');
     } catch (err) {
         console.error(err);
         res.status(500).send("Failed to add");
@@ -126,6 +130,7 @@ const loginBenOrg = async (req, res) => {
             validate,
             message: 'Successfully Login',
             token: token,
+            redirect: '/'
         });
     } catch (err) {
         console.error(err);

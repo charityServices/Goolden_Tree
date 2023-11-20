@@ -2,13 +2,14 @@ const { STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY } = process.env;
 
 const stripe = require('stripe')(STRIPE_SECRET_KEY)
 
-const renderBuyPage = async(req,res)=>{
+const renderBuyPage = async (req, res) => {
 
     try {
-        
+
         res.render('buy', {
             key: STRIPE_PUBLISHABLE_KEY,
-            amount:100
+            amount: 50,
+            currency: 'USD' // تغيير العملة إلى الدينار الأردني
         })
 
     } catch (error) {
@@ -17,37 +18,37 @@ const renderBuyPage = async(req,res)=>{
 
 }
 
-const payment = async(req,res)=>{
+const payment = async (req, res) => {
 
     try {
 
-    stripe.customers.create({
-        email: req.body.stripeEmail,
-        source: req.body.stripeToken,
-        name: 'Sandeep Sharma',
-        address: {
-            line1: '115, Vikas Nagar',
-            postal_code: '281001',
-            city: 'Mathura',
-            state: 'Uttar Pradesh',
-            country: 'India',
-        }
-    })
-    .then((customer) => {
- 
-        return stripe.charges.create({
-            amount: req.body.amount,     // amount will be amount*100
-            description: req.body.productName,
-            currency: 'INR',
-            customer: customer.id
-        });
-    })
-    .then((charge) => {
-        res.redirect("/success")
-    })
-    .catch((err) => {
-        res.redirect("/failure")
-    });
+        stripe.customers.create({
+            email: req.body.stripeEmail,
+            source: req.body.stripeToken,
+            name: 'متبرع', // قم بتغييره إلى اسم العميل
+            address: {
+                line1: 'العنوان الخط الأول',
+                postal_code: '000',
+                city: 'عمان',
+                state: 'عمان',
+                country: 'الأردن', // تغيير البلد
+            }
+        })
+            .then((customer) => {
+
+                return stripe.charges.create({
+                    amount: req.body.amount * 100, // قم بتغييره إلى المبلغ بالدينار الأردني
+                    description: req.body.productName,
+                    currency: 'USD', // تغيير العملة إلى الدينار الأردني
+                    customer: customer.id
+                });
+            })
+            .then((charge) => {
+                res.redirect("/success")
+            })
+            .catch((err) => {
+                res.redirect("/failure")
+            });
 
 
     } catch (error) {
@@ -56,10 +57,10 @@ const payment = async(req,res)=>{
 
 }
 
-const success = async(req,res)=>{
+const success = async (req, res) => {
 
     try {
-        
+
         res.render('success');
 
     } catch (error) {
@@ -68,10 +69,10 @@ const success = async(req,res)=>{
 
 }
 
-const failure = async(req,res)=>{
+const failure = async (req, res) => {
 
     try {
-        
+
         res.render('failure');
 
     } catch (error) {

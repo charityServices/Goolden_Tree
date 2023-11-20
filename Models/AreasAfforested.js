@@ -20,6 +20,10 @@ const AreasAfforestedSchema = new Schema({
     type: String,
     required: false,
   },
+  descriptionAfforested: {
+    type: String,
+    required: false,
+  },
   treesPlanted: {
     type: Number,
     required: false,
@@ -30,7 +34,7 @@ const AreasAfforestedSchema = new Schema({
   },
   afforestedAreaImageName: {
     type: String,
-    allowNull: true,
+    allowNull: false,
   },
   isDeleted: {
     type: Boolean,

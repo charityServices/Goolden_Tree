@@ -23,11 +23,10 @@ const addImage = multer({ storage: storage });
 const imageUser = addImage.single('image');
 
 const registerDonOrg = async (req, res) => {
-    const { orgName, orgId, address, email, password, confirm_password, phoneNumber } = req.body;
+    const { orgName, address, email, password, confirm_password, phoneNumber } = req.body;
     try {
         const schema = Joi.object({
             orgName: Joi.string().min(3).max(25).required(),
-            orgId: Joi.string().min(3).max(25).required(),
             address: Joi.string().min(3).max(25).required(),
             email: Joi.string().email({ minDomainSegments: 2 }).required(),
             password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&!])[A-Za-z\\d@#$%^&!]{8,30}$')).required(),
@@ -35,7 +34,7 @@ const registerDonOrg = async (req, res) => {
             phoneNumber: Joi.string().trim().pattern(/^[0-9]{10}$/).message('Phone number must be a 10-digit numeric value').required(),
         });
 
-        const validate = schema.validate({ orgName, orgId, address, email, password, confirm_password, phoneNumber });
+        const validate = schema.validate({ orgName, address, email, password, confirm_password, phoneNumber });
 
         if (validate.error) {
             return res.status(400).json({ error: validate.error.details });
@@ -53,7 +52,6 @@ const registerDonOrg = async (req, res) => {
 
         const newUser = new DonOrgMODEL({
             orgName,
-            orgId,
             address,
             email,
             password: hashedPassword,
@@ -71,11 +69,14 @@ const registerDonOrg = async (req, res) => {
         const secretKey = process.env.SECRET_KEY;
         const token = jwt.sign(payload, secretKey, { expiresIn: "7d" });
 
-        res.status(200).json({
+        res.status(200).send({
             validate,
             message: "User added successfully",
-            token
+            token,
+            redirect: '/'
         });
+        // res.redirect('http://localhost:5000');
+
     } catch (err) {
         console.error(err);
         res.status(500).send("Failed to add");
@@ -125,6 +126,7 @@ const loginDonOrg = async (req, res) => {
             validate,
             message: 'Successfully Login',
             token: token,
+            redirect: '/'
         });
     } catch (err) {
         console.error(err);
@@ -268,7 +270,9 @@ const getDonOrgId = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: "The User not found" });
         } else {
-            res.status(200).json(user);
+            // res.status(200).json(user);
+            res.render("profile", { user });
+
         }
     } catch (err) {
         console.error(err);
@@ -278,12 +282,11 @@ const getDonOrgId = async (req, res) => {
 
 const updateDonOrgData = async (req, res) => {
     const { id } = req.params;
-    const { orgName, orgId, address, email, password, confirm_password, phoneNumber } = req.body;
+    const { orgName, address, email, password, confirm_password, phoneNumber } = req.body;
 
     try {
         const schema = Joi.object({
             orgName: Joi.string().min(3).max(25).required(),
-            orgId: Joi.string().min(3).max(25).required(),
             address: Joi.string().min(3).max(25).required(),
             email: Joi.string().email({ minDomainSegments: 2 }).required(),
             password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&!])[A-Za-z\\d@#$%^&!]{8,30}$')).required(),
@@ -291,7 +294,7 @@ const updateDonOrgData = async (req, res) => {
             phoneNumber: Joi.string().trim().pattern(/^[0-9]{10}$/).message('Phone number must be a 10-digit numeric value').required(),
         });
 
-        const validate = schema.validate({ orgName, orgId, address, email, password, confirm_password, phoneNumber });
+        const validate = schema.validate({ orgName, address, email, password, confirm_password, phoneNumber });
 
 
         if (validate.error) {
@@ -309,7 +312,6 @@ const updateDonOrgData = async (req, res) => {
         const updatedUser = await DonOrgMODEL.findByIdAndUpdate(id, {
             $set: {
                 orgName,
-                orgId,
                 address,
                 email,
                 password: hashedPassword,

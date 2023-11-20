@@ -13,30 +13,39 @@ const transporter = nodemailer.createTransport({
         user: 'mohammedhassouna000@gmail.com',
         pass: 'iyfyzqcsphpdwgvz',
     },
+    auth: {
+        user: 'psmohammad780@gmail.com',
+        pass: 'lpvkrxpgamkzlwzl',
+    },
 });
 
-const sendMessageEmail = async (email, message, subject) => {
+const sendMessageEmail = async (fullname, email, message, subject) => {
     const mailOptions = {
         from: email,
         to: 'mohammedhassouna000@gmail.com',
+        // to: email,
         subject: subject,
-        text: message,
+        html: `<p><strong>fullname:</strong> ${fullname}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong> ${message}</p>`,
     };
+    // console.log(email);
     try {
         await transporter.sendMail(mailOptions);
     } catch (error) {
         console.error('Error sending email:', error);
-        throw new Error('Failed to send email verification');
+        throw new Error('Failed to send email');
     }
 };
 
+
 const sendEmailContact = async (req, res) => {
     try {
+
+        const fullname = req.body.name;
         const email = req.body.email;
         const message = req.body.message;
         const subject = req.body.subject;
 
-        await sendMessageEmail(email, message, subject);
+        await sendMessageEmail(fullname, email, message, subject);
 
         res.status(200).json({ message: 'Email has been sent.' });
 
@@ -45,6 +54,7 @@ const sendEmailContact = async (req, res) => {
         res.status(500).json({ error: 'An error occurred while sending the email.' });
     }
 };
+
 
 
 module.exports = {

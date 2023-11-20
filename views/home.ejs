@@ -19,7 +19,7 @@
               style="background-image: url('https://cf.bstatic.com/xdata/images/hotel/max1024x768/456668602.jpg?k=16cb4306495fcc38081f235ff333a75e704238f5b218af701850c71a3ef68f44&o=&hp=1')">
               <div class="carousel-caption">
                 <h5>البيئة هي مستقبلنا، لنحافظ عليها</h5>
-                <p>الحفاظ على البيئة يعني الاستدامة للحياة</p>
+                <p class="hero-section">الحفاظ على البيئة يعني الاستدامة للحياة</p>
               </div>
             </div>
             <div class="carousel-item"
@@ -123,31 +123,25 @@
 
       <section class="container-WillAfforested">
         <div class="center">
-          <% if (AreasAfforested3 && AreasAfforested3.length> 0) { %>
-            <% AreasAfforested3.forEach(area=> { %>
+          <% if (AreasAfforested3 && AreasAfforested3.length > 0) { %>
+            <% AreasAfforested3.forEach(area => { %>
               <div class="property-card">
-                <a href="#">
+                <a href="/afforested-area/<%= area._id %>">
                   <div class="property-image">
-                    <!-- Add the image source here -->
                     <img class="img_WillAfforestedAreas" src="<%= area.image_url %>" alt="<%= area.placeName %> Image">
                   </div>
                 </a>
                 <div class="property-description">
-                  <h5>
-                    <%= area.placeName %>
-                  </h5>
-                  <p>
-                    <%= area.areasLocation %>
-                  </p>
-                  <p>تاريخ تقديم الطلب: <%= area.datePlanted %>
-                  </p>
+                  <h5><%= area.placeName %></h5>
+                  <p><%= area.areasLocation %></p>
+                  <p>تاريخ تقديم الطلب: <%= area.datePlanted %></p>
                   <p>بحاجة الى <%= area.treesPlanted %> شجرة </p>
                 </div>
               </div>
-              <% }); %>
-                <% } else { %>
-                  <p>No afforested areas found</p>
-                  <% } %>
+            <% }); %>
+          <% } else { %>
+            <p>No afforested areas found</p>
+          <% } %>
         </div>
       </section>
       <div class="h1-heading">
