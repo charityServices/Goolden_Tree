@@ -74,5 +74,7 @@ const AreasAfforestedSchema = new Schema({
   }
 });
 
+
+
 const Afforested = mongoose.model("Afforested", AreasAfforestedSchema);
 module.exports = Afforested;
