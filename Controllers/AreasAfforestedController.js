@@ -171,8 +171,8 @@ const addNewAfforestedActivity = async (req, res) => {
 const updateAfforestedActivityById = async (req, res) => {
   try {
     const id = req.params.id;
-    const { placeName, areasLocation, treesPlanted, datePlanted } = req.body;
-    const afforestedAreaImageName = req.file.filename;
+    const { placeName, areasLocation, treesPlanted, datePlanted, views, currentDonationAmount } = req.body;
+    // const afforestedAreaImageName = req.file.filename;
 
     const updateAfforestedActivity = await Afforested.findByIdAndUpdate(
       id,
@@ -181,7 +181,9 @@ const updateAfforestedActivityById = async (req, res) => {
         areasLocation,
         treesPlanted,
         datePlanted,
-        afforestedAreaImageName,
+        views,
+        currentDonationAmount
+        // afforestedAreaImageName,
       },
       { new: true }
     );
@@ -255,6 +257,7 @@ const donateAF = async (req, res) => {
       if (donation.currentDonationAmount === donation.maxDonationAmount) {
         donation.expirationTime = new Date(Date.now() + 15 * 1000);
         donation.InWork = true;
+        donation.views = false;
       }
       await donation.save();
       setTimeout(async () => {

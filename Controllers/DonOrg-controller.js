@@ -63,7 +63,9 @@ const registerDonOrg = async (req, res) => {
         const payload = {
             orgName,
             email,
-            user_id: newUser._id
+            user_id: newUser._id,
+            role:"DonOrg"
+
         };
 
         const secretKey = process.env.SECRET_KEY;
@@ -117,6 +119,7 @@ const loginDonOrg = async (req, res) => {
             orgName: user.orgName,
             user_id: user._id,
             email: user.email,
+            role:"DonOrg"
         };
 
         const secretKey = process.env.SECRET_KEY;

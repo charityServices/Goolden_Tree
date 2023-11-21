@@ -64,18 +64,16 @@
                     <i class="fas fa-tree"></i>
                   </div>
                   <div class="info">
-                    <div class="main">
+                    <p class="main">
                       <%= area.placeName %>
-                    </div>
-                    <div class="sub">
+                    </p>
+                    <p class="sub">
                       <%= area.areasLocation %>
-                    </div>
-                    <div class="sub">
-                      <%= area.treesPlanted %> trees planted
-                    </div>
-                    <div class="sub">Planted on <%= area.datePlanted %>
-                    </div>
-                    <!-- Add other details as needed -->
+                    </p>
+                    <p>
+                      تم زراعة <%= area.treesPlanted %> شجرة
+                    </p>
+
                   </div>
                 </div>
               </div>
@@ -106,8 +104,6 @@
                   <p>
                     <%= area.areasLocation %>
                   </p>
-                  <p>تاريخ تقديم الطلب: <%= area.datePlanted %>
-                  </p>
                   <p>بحاجة الى <%= area.treesPlanted %> شجرة </p>
                 </div>
               </div>
@@ -134,7 +130,6 @@
                 <div class="property-description">
                   <h5><%= area.placeName %></h5>
                   <p><%= area.areasLocation %></p>
-                  <p>تاريخ تقديم الطلب: <%= area.datePlanted %></p>
                   <p>بحاجة الى <%= area.treesPlanted %> شجرة </p>
                 </div>
               </div>

@@ -16,7 +16,7 @@ const authentication = passport.authenticate("google", {
 });
 
 const authenticationCallback = passport.authenticate("google", {
-    successRedirect: "/protected",
+    successRedirect: "http://localhost:5000",
     failureRedirect: "/auth/google/failure",
 });
 

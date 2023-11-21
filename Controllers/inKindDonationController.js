@@ -179,6 +179,10 @@ const createInKindDonation = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+const renderDonationForm = (req, res) => {
+  const { id } = req.params;
+  res.render('createDonations', { donorId: id });
+};
 
 module.exports = {
   getAllInKindDonations,
@@ -187,7 +191,7 @@ module.exports = {
   getDonationsByDonorId,
   imageActivity,
   
-  // renderDonationForm, 
+  renderDonationForm, 
   // Add other controller methods as needed
 };
 

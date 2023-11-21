@@ -43,9 +43,10 @@ const AreasAfforestedSchema = new Schema({
   DonationAmount: {
     type: Number,
     allowNull: true,
+    default: 0,
   },
   Date: {
-    type: String,
+    type: Schema.Types.Date, 
     allowNull: true,
   },
   isCompleted: {
@@ -62,6 +63,7 @@ const AreasAfforestedSchema = new Schema({
     type: Number,
     allowNull: true,
     required: false,
+    default: 2000,
   },
   currentDonationAmount: {
     type: Number,
@@ -71,7 +73,12 @@ const AreasAfforestedSchema = new Schema({
     type: Date,
     allowNull: true,
     required: false,
-  }
+  },
+  views: {
+    type: Boolean,
+    allowNull: false,
+    default: false,
+  },
 });
 
 

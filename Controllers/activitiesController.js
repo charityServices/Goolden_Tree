@@ -32,11 +32,12 @@ const getAllActivities = async (req, res) => {
       image_url: `http://localhost:5000/ActivitiesImages/${activity.activitiesImageName}`,
     }))
     
-    res.status(200).json({
-      success: true,
-      message: "Activities returned Successfully",
-      Activities: activitiesWithImages
-    })
+
+res.status(200).json({
+  success: true,
+  message: "Activities returned Successfully",
+  Activities: activitiesWithImages,
+});
   
   } catch(error) {
     console.error("Error Occurred While Get Activities", error)

@@ -25,6 +25,7 @@ const WillAfforested = require("./Models/AreasWillAfforested");
 const Activities = require("./Models/Activities");
 const Donors = require("./Models/FinancialDonation");
 const paymentRouter = require("./Routers/paymentRouter");
+
 //
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 
@@ -84,6 +85,10 @@ app.get("/about", (request, response) => {
   response.render("about", { title: "About" });
 });
 
+app.get("/donations", (request, response) => {
+  response.render("createDonations", { title: "createDonations" });
+});
+
 app.get("/success", (request, response) => {
   response.render("success", { title: "Success" });
 });
@@ -128,6 +133,7 @@ app.use(FinancialDonation);
 
 app.use(paymentRouter);
 
+
 app.use("/InKindDonationsImages", express.static(path.join(__dirname, "InKindDonationsImages")));
 app.use(inKindDonationRoutes);
 
@@ -153,7 +159,7 @@ app.get("/", async (req, res) => {
 
     const willAfforested = await Afforested.find({ isCompleted: false, InWork: true });
 
-    const money = await Afforested.find({ isCompleted: false, InWork: false });
+    const money = await Afforested.find({ views: true });
 
     const areasAfforestedWithImages = areasAfforested.map((area) => ({
       ...area.toJSON(),
@@ -224,6 +230,12 @@ app.get("/afforested-area/:id", async (req, res) => {
     });
   }
 });
+
+
+
+// app.get('/donations', (req, res) => {
+//   res.render('donations');
+// });
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
